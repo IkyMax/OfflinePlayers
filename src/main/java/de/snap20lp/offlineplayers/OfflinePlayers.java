@@ -4,6 +4,8 @@ import de.snap20lp.offlineplayers.events.OfflinePlayerDeathEvent;
 import de.snap20lp.offlineplayers.events.OfflinePlayerDespawnEvent;
 import de.snap20lp.offlineplayers.events.OfflinePlayerHitEvent;
 import de.snap20lp.offlineplayers.events.OfflinePlayerSpawnEvent;
+import org.geysermc.floodgate.api.FloodgateApi;
+import org.geysermc.geyser.api.GeyserApi;
 import lombok.Getter;
 import me.libraryaddict.disguise.events.UndisguiseEvent;
 import org.bukkit.Bukkit;
@@ -27,6 +29,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -167,7 +170,11 @@ public class OfflinePlayers extends JavaPlugin implements Listener {
     }
 
     @EventHandler
+    public boolean isBedrockPlayer(Player player) {
+		return floodgateApi.isFloodgatePlayer(player.getUniqueId());
+	}
     public void on(PlayerQuitEvent playerQuitEvent) {
+        boolean isFloodgatePlayer = playerBedrockStateCache.remove(player.getUniqueId());
         Player quitPlayer = playerQuitEvent.getPlayer();
 
         if (getConfig().getStringList("OfflinePlayer.worldBlacklist").contains(quitPlayer.getWorld().getName())) {
